@@ -84,12 +84,12 @@ pnpm test
 
 To run tests in watch mode:
 ```bash
-pnpm run test:watch
+pnpm test:watch
 ```
 
 To run tests with coverage:
 ```bash
-pnpm run test:coverage
+pnpm test:coverage
 ```
 
 

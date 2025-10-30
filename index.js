@@ -217,12 +217,13 @@ class ObjectStoreStorage extends StorageBase {
 
         const response = await this.s3Client.send(command);
 
-        //Set essential headers for optimal user experience
+        // Set Content-Type header
         if (response.ContentType) {
           res.set('Content-Type', response.ContentType);
         }
 
         // Add caching headers for better performance
+        // TODO: Move this magic number to a constant/config?
         res.set('Cache-Control', 'public, max-age=31536000');
 
         // Set ETag for cache validation
@@ -248,7 +249,6 @@ class ObjectStoreStorage extends StorageBase {
           res.status(404).send('File not found');
         } else {
           // Other errors - pass to next middleware
-          console.error('Error serving file from Object Store:', error);
           next(error);
         }
       }
