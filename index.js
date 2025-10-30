@@ -40,7 +40,7 @@ class ObjectStoreStorage extends StorageBase {
     this.storagePath = config.storagePath;
     this.staticFileURLPrefix = config.staticFileURLPrefix;
 
-    // Initialize ObjectStore client
+    // Initialize S3 client
     this.s3Client = new S3Client({
       endpoint: config.endpoint,
       region: config.region,
@@ -54,8 +54,8 @@ class ObjectStoreStorage extends StorageBase {
   }
 
   /**
-   * Saves the file to ObjectStore storage
-   * - returns a promise which ultimately returns the full url to the uploaded file
+   * Saves the file to Object Store
+   * Returns a promise which ultimately returns the object key (path in bucket) of the uploaded file
    *
    * @param {StorageBase.Image} file
    * @param {String} targetDir
@@ -65,10 +65,8 @@ class ObjectStoreStorage extends StorageBase {
     // Get a unique filename (using the base class method)
     const fileName = await this.getUniqueFileName(file, targetDir);
 
-    // Create the object key (path in ObjectStore)
     const objectKey = fileName.replace(/\\/g, '/');
 
-    // Create upload command
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: objectKey,
@@ -77,7 +75,6 @@ class ObjectStoreStorage extends StorageBase {
     });
 
     try {
-      // Upload to Object Store
       await this.s3Client.send(command);
 
       return `/${objectKey}`;
@@ -87,17 +84,16 @@ class ObjectStoreStorage extends StorageBase {
   }
 
   /**
-   * Saves a buffer in the targetPath
+   * Saves a buffer to targetPath in Object Store
+   * Returns a promise which ultimately returns the object key (path in bucket) of the uploaded file
    *
    * @param {Buffer} buffer is an instance of Buffer
    * @param {String} targetPath relative path NOT including storage path to which the buffer should be written
    * @returns {Promise<String>} a URL to retrieve the data
    */
   async saveRaw(buffer, targetPath) {
-    // Create the object key (path in ObjectStore)
     const objectKey = `${this.staticFileURLPrefix}${targetPath.replace(/\\/g, '/')}`;
 
-    // Create upload command
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: objectKey,
@@ -105,7 +101,6 @@ class ObjectStoreStorage extends StorageBase {
     });
 
     try {
-      // Upload to Object Store
       await this.s3Client.send(command);
 
       return `/${objectKey}`;
@@ -141,7 +136,7 @@ class ObjectStoreStorage extends StorageBase {
   }
 
   /**
-   * Deletes a file from Object Store storage
+   * Deletes a file from Object Store
    *
    * @param {String} fileName
    * @param {String} targetDir
@@ -163,7 +158,7 @@ class ObjectStoreStorage extends StorageBase {
   }
 
   /**
-   * Reads bytes from ObjectStore for a target file
+   * Reads bytes from Object Store for a target file
    *
    * @param {Object} options
    * @returns {Promise<Buffer>}
@@ -196,7 +191,7 @@ class ObjectStoreStorage extends StorageBase {
   }
 
   /**
-   * Serves static files from ObjectStore
+   * Serves static files from Object Store
    *
    * @returns {Function} Express middleware function
    */
@@ -217,24 +212,22 @@ class ObjectStoreStorage extends StorageBase {
 
         const response = await this.s3Client.send(command);
 
-        // Set Content-Type header
+        // Set appropriate response headers
         if (response.ContentType) {
           res.set('Content-Type', response.ContentType);
         }
 
-        // Add caching headers for better performance
         // TODO: Move this magic number to a constant/config?
         res.set('Cache-Control', 'public, max-age=31536000');
 
-        // Set ETag for cache validation
         if (response.ETag) {
           res.set('ETag', response.ETag);
         }
 
-        // Set Last-Modified header
         if (response.LastModified) {
           res.set('Last-Modified', new Date(response.LastModified).toUTCString());
         }
+        // End set headers
 
         // Stream the file content to the client
         if (response.Body) {
