@@ -2,7 +2,7 @@
 
 An Object Store storage adapter for Ghost CMS that allows storing images and other files in object storage instead of the local file system.
 
-Works with any S3-compatible object storage service including Cloudflare R2, MinIO, DigitalOcean Spaces, Wasabi, and Amazon S3.
+Works with any object storage service that uses an S3-compatible API including Cloudflare R2, MinIO, DigitalOcean Spaces, Wasabi, and Amazon S3.
 
 **NOTE**: Only MinIO and Amazon S3 have been tested extensively so your mileage may vary with others.
 
@@ -12,24 +12,30 @@ Works with any S3-compatible object storage service including Cloudflare R2, Min
 - Store images and files in object storage
 - Automatically serve files from the object storage
 - Support for all Ghost image storage operations (save, delete, exists, read, serve)
+- Additionally supports the `saveRaw` operation for raw file uploads
 - Full compatibility with Ghost's storage adapter system
 - S3-compatible interface using AWS SDK v3
 
 
 ## Installation
 
-```bash:
-pnpm install ghost-object-store-storage-adapter
+To get the adapter working, first, use `npm` to install it then move it to your Ghost installation's `content/adapters/storage` directory.
+
+To achieve this, run the following commands:
+
+```bash
 mkdir -p /var/lib/ghost/content/adapters/storage/object-store
-cp -r node_modules/ghost-object-store-storage-adapter/* /var/lib/ghost/content/adapters/storage/object-store
+npm install https://github.com/CodeForAfrica/ghost-object-store-storage-adapter.git --omit=dev
+cp -r ./node_modules/ghost-object-store-storage-adapter/* /var/lib/ghost/content/adapters/storage/object-store
 ```
 
+Once this is done, proceed to configure the adapter as described below.
 
 ## Configuration
 
 Add the following configuration to your Ghost config.js file (or environment variables):
 
-```javascript
+```json
 {
   "storage": {
     "active": "object-store",
@@ -71,7 +77,7 @@ storage__object_store__useSSL: false
 
 ## Requirements
 
-- Ghost 6.5.3+
+- Ghost 6.4.0+
 - Node.js 18+
 
 
