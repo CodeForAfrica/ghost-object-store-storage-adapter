@@ -85,17 +85,17 @@ storage__object_store__useSSL: false
 
 To run tests:
 ```bash
-pnpm test
+npm run test
 ```
 
 To run tests in watch mode:
 ```bash
-pnpm test:watch
+npm run test:watch
 ```
 
 To run tests with coverage:
 ```bash
-pnpm test:coverage
+npm run test:coverage
 ```
 
 
@@ -104,7 +104,7 @@ pnpm test:coverage
 To develop this adapter locally:
 
 1. Clone the repository
-2. Run pnpm install
+2. Run npm install
 3. Make changes to index.js (This is the main adapter file)
 4. Profit?
 
