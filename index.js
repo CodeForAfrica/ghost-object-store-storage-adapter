@@ -64,10 +64,10 @@ class ObjectStoreStorage extends StorageBase {
   async save(file, targetDir) {
     console.log('Saving file to Object Store:', file);
     console.log('Target directory:', targetDir);
-    const storagePath = this.getTargetDir(this.storagePath);
+    const storagePath = targetDir || this.getTargetDir(this.storagePath);
     console.log('Storage Path', storagePath);
-    // Get a unique filename (using the base class method)
-    const fileName = await this.getUniqueFileName(file, storagePath);
+    // Get file path (using the base class method)
+    const fileName = await this.getUniqueSecureFilePath(file, storagePath);
 
     const objectKey = fileName.replace(/\\/g, '/');
 
