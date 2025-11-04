@@ -1,17 +1,13 @@
 name: Node.js CI with Coverage
 
-on:
-  push:
-    branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x, 24.X]
+        node-version: [22.x, 24.X]
 
     steps:
     - uses: actions/checkout@v4
