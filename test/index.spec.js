@@ -68,15 +68,15 @@ describe('ObjectStoreStorage', () => {
       const mockUniqueFileName = 'test-file-123.jpg';
       const mockUrl = '/test-file-123.jpg';
 
-      // Mock the getUniqueFileName method to return a test filename
-      objectStoreStorage.getUniqueFileName = jest.fn().mockResolvedValue(mockUniqueFileName);
+      // Mock the getUniqueSecureFilePath method to return a test filename
+      objectStoreStorage.getUniqueSecureFilePath = jest.fn().mockReturnValue(mockUniqueFileName);
 
       // Mock the S3 client send to resolve with successful response
       mockS3Client.send.mockResolvedValue({});
 
       const result = await objectStoreStorage.save(mockFile, '/images');
 
-      expect(objectStoreStorage.getUniqueFileName).toHaveBeenCalledWith(mockFile, '/images');
+      expect(objectStoreStorage.getUniqueSecureFilePath).toHaveBeenCalledWith(mockFile, '/images');
       expect(mockS3Client.send).toHaveBeenCalledWith(expect.any(PutObjectCommand));
       expect(result).toBe(mockUrl);
     });
@@ -89,8 +89,8 @@ describe('ObjectStoreStorage', () => {
       };
       const mockUniqueFileName = 'test-file-123.jpg';
 
-      // Mock the getUniqueFileName method to return a test filename
-      objectStoreStorage.getUniqueFileName = jest.fn().mockResolvedValue(mockUniqueFileName);
+      // Mock the getUniqueSecureFilePath method to return a test filename
+      objectStoreStorage.getUniqueSecureFilePath = jest.fn().mockReturnValue(mockUniqueFileName);
 
       // Mock an error from the S3 client
       mockS3Client.send.mockRejectedValue(new Error('Save failed'));
