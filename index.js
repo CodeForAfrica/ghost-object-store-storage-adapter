@@ -14,15 +14,15 @@ class ObjectStoreStorage extends StorageBase {
   constructor(options = {}) {
     // Default configuration (Mostly for dev. You should definitely change these.)
     const defaultOptions = {
-      endpoint: process.env.storage__object_store__endpoint || 'http://minio:9000',
-      accessKey: process.env.storage__object_store__accessKey,
-      secretKey: process.env.storage__object_store__secretKey,
-      bucket: process.env.storage__object_store__bucket || 'ghost',
-      region: process.env.storage__object_store__region || 'eu-west-1',
-      useSSL: process.env.storage__object_store__useSSL === 'true' || false,
+      endpoint: process.env.storage__objectStore__endpoint || 'http://minio:9000',
+      accessKey: process.env.storage__objectStore__accessKey,
+      secretKey: process.env.storage__objectStore__secretKey,
+      bucket: process.env.storage__objectStore__bucket || 'ghost',
+      region: process.env.storage__objectStore__region || 'eu-west-1',
+      useSSL: process.env.storage__objectStore__useSSL === 'true' || false,
       // For Ghost's static file handling
-      storagePath: process.env.storage__object_store__storagePath || 'content/media/',
-      staticFileURLPrefix: process.env.storage__object_store__staticFileURLPrefix || 'content/media/',
+      storagePath: process.env.storage__objectStore__storagePath || 'content/media/',
+      staticFileURLPrefix: process.env.storage__objectStore__staticFileURLPrefix || 'content/media/',
     };
 
     // Merge provided options with defaults

@@ -45,7 +45,7 @@ Add the following configuration to your Ghost config.js file (or environment var
     "files": {
       "adapter": "object-store"
     },
-    "object_store": {
+    "objectStore": {
       "endpoint": "localhost:9000",
       "accessKey": "youracesskey",
       "secretKey": "yoursecretkey",
@@ -66,12 +66,12 @@ Alternatively, you can set these environment variables in Ghost:
 storage__active: object-store
 storage__files__adapter: object-store
 storage__media__adapter: object-store
-storage__object_store__endpoint: localhost:9000
-storage__object_store__accessKey: youracesskey
-storage__object_store__secretKey: yoursecretkey
-storage__object_store__bucket: bucket
-storage__object_store__region: your-desired-region
-storage__object_store__useSSL: false
+storage__objectStore__endpoint: localhost:9000
+storage__objectStore__accessKey: youracesskey
+storage__objectStore__secretKey: yoursecretkey
+storage__objectStore__bucket: bucket
+storage__objectStore__region: your-desired-region
+storage__objectStore__useSSL: false
 ```
 
 
