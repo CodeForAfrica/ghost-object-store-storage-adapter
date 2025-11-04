@@ -67,7 +67,7 @@ class ObjectStoreStorage extends StorageBase {
     const storagePath = targetDir || this.getTargetDir(this.storagePath);
     console.log('Storage Path', storagePath);
     // Get file path (using the base class method)
-    const fileName = await this.getUniqueSecureFilePath(file, storagePath);
+    const fileName = await this.getUniqueFileName(file, storagePath);
 
     const objectKey = fileName.replace(/\\/g, '/');
 
