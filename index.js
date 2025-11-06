@@ -64,20 +64,18 @@ class ObjectStoreStorage extends StorageBase {
   async save(file, targetDir) {
     // NOTE: the base implementation of `getTargetDir` returns the format this.storagePath/YYYY/MM
     const storagePath = targetDir || this.getTargetDir(this.storagePath);
-
-    // NOTE: getUniqueFileName is deprecated in v1.1.1 of ghost-storage-base, it is recommended to use getUniqueSecureFilePath instead.
-    // See: https://github.com/TryGhost/Ghost-Storage-Base/blob/c78655b1cd54c93b53327bc8e1cf3123c085ebd2/BaseStorage.js#L131
-    // However, calling that method results in files being corrupted in Object Store.
-    //
-    // TODO: Figure out why getUniqueSecureFilePath corrupts files and switch to using it.
-    const fileName = await this.getUniqueFileName(file, storagePath);
-
+    const fileName = await this.getUniqueSecureFilePath(file, storagePath);
     const objectKey = fileName.replace(/\\/g, '/');
+
+    // The file object contains metadata but not the actual file content.
+    // We need to read the file from the filesystem path to get the content.
+    const fs = require('fs').promises;
+    const fileContent = await fs.readFile(file.path);
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: objectKey,
-      Body: file.contents || file.path,
+      Body: fileContent,
       ContentType: file.type
     });
 
