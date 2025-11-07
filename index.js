@@ -1,7 +1,8 @@
 'use strict';
 
+const fs = require('node:fs/promises');
+const { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, HeadObjectCommand } = require('@aws-sdk/client-s3');
 const StorageBase = require('ghost-storage-base');
-const { S3Client, PutObjectCommand, GetObjectCommand, HeadObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 /**
  * Object Store Storage Adapter for Ghost
@@ -69,7 +70,6 @@ class ObjectStoreStorage extends StorageBase {
 
     // The file object contains metadata but not the actual file content.
     // We need to read the file from the filesystem path to get the content.
-    const fs = require('fs').promises;
     const fileContent = await fs.readFile(file.path);
 
     const command = new PutObjectCommand({
