@@ -65,7 +65,9 @@ class ObjectStoreStorage extends StorageBase {
   async save(file, targetDir) {
     // NOTE: the base implementation of `getTargetDir` returns the format this.storagePath/YYYY/MM
     const storagePath = targetDir || this.getTargetDir(this.storagePath);
-    const fileName = await this.getUniqueSecureFilePath(file, storagePath);
+    // ghost-storage-base 2.x removed getUniqueSecureFilePath, we fall back to
+    // getUniqueFileName, which remains available (Promise-returning).
+    const fileName = await this.getUniqueFileName(file, storagePath);
     const objectKey = fileName.replace(/\\/g, '/');
 
     // The file object contains metadata but not the actual file content.
